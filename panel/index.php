@@ -285,7 +285,7 @@ endif;
 								<li><a href='?pg=berita'><i class='fas fa-angle-double-right fa-fw'></i> <span> Berita Acara</span></a></li>
 								<?php if ($setting['server'] == 'pusat') : ?>
 									<?php $path = explode("/", $_SERVER['REQUEST_URI']); ?>
-									<li><a href="http://localhost/<?= $path[1] ?>/token_client" target='_blank'><i class='fas fa-angle-double-right fa-fw'></i> <span> Token Client</span></a></li>
+									<li><a href="http://<?= $_SERVER['SERVER_NAME'] ?>/<?= $path[1] ?>/token_client" target='_blank'><i class='fas fa-angle-double-right fa-fw'></i> <span>Token Client</span></a></li>
 								<?php endif; ?>
 							</ul>
 						</li>

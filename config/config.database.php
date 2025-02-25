@@ -3,7 +3,7 @@
 $host = 'localhost';
 $user = 'root';
 $pass = '';
-$debe = 'cbt';
+$debe = 'cbtsmk';
 
 
 $koneksi = mysqli_connect($host, $user, $pass, "");

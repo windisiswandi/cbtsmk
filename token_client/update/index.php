@@ -1,5 +1,5 @@
 <?php
-    $data_server = ["192.168.8.1", "192.168.8.2", "192.168.8.3", "192.168.8.4","192.168.8.5", "192.168.8.6", "192.168.8.7", "192.168.8.8"];
+    $data_server = ["192.168.8.1", "192.168.8.2", "192.168.8.3", "192.168.8.4","192.168.8.5", "192.168.8.6", "192.168.8.7", "192.168.8.8", "192.168.8.9", "192.168.8.10", "192.168.8.11", "192.168.8.12"];
     
     $ch = curl_init();
 	
@@ -7,7 +7,7 @@
 
     foreach ($data_server as $key => $ds) {
         $key++;
-        $url = "http://" . $ds . "/us24/panel/mod_jadwal/crud_jadwal.php?pg=token";
+        $url = "http://" . $ds . "/pkl/panel/mod_jadwal/crud_jadwal.php?pg=token";
         curl_setopt($ch, CURLOPT_URL, $url);
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
