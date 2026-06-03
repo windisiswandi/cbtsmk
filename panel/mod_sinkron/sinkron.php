@@ -18,12 +18,12 @@ if ($koneksi) {
                 $r = json_decode($datax, TRUE);
                 if ($r <> null) {
                     //if ($r['token'] == 'tokenx') {
-                    $sql = mysqli_query($koneksi, "truncate table siswa");
+                    // $sql = mysqli_query($koneksi, "truncate table siswa");
                     $i = 1;
                     foreach ($r['siswa'] as $r) {
-                        $sql = mysqli_query($koneksi, "insert into siswa
-                            (id_siswa,id_kelas,idpk,nis,no_peserta,nama,level,ruang,sesi,username,password,foto,server,agama) values 			
-                            ('$r[id_siswa]','$r[id_kelas]','$r[idpk]','$r[nis]','$r[no_peserta]','" . addslashes($r['nama']) . "','$r[level]','$r[ruang]','$r[sesi]','$r[username]','$r[password]','$r[foto]','$r[server]','$r[agama]')");
+                        $sql = mysqli_query($koneksi, "INSERT into siswa
+                            (id_siswa,id_kelas,idpk,nis,no_peserta,nama,level,ruang,sesi,username,password,foto,server,agama,status) values 			
+                            ('$r[id_siswa]','$r[id_kelas]','$r[idpk]','$r[status]','$r[no_peserta]','" . addslashes($r['nama']) . "','$r[level]','$r[ruang]','$r[sesi]','$r[username]','$r[password]','$r[foto]','$r[server]','$r[agama]','$r[status]') ON DUPLICATE KEY UPDATE status='$r[status]'");
 
                         $qkelas = mysqli_query($koneksi, "SELECT id_kelas FROM kelas WHERE id_kelas='$r[id_kelas]'");
                         $cekkelas = mysqli_num_rows($qkelas);
@@ -96,11 +96,11 @@ if ($koneksi) {
       </div>';
                 }
             }
+
             if ($data == 'soal') {
 
-
                 $syncdata = http_request($setting['url_host'] . "/syncsoal.php?token=" . $token);
-
+                // echo $syncdata; die;
                 $sync = json_decode($syncdata, TRUE);
 
                 //$jurarray = unserialize($setting['jurusan']);
@@ -122,40 +122,41 @@ if ($koneksi) {
                                 $masuk2++;
                             }
 
-                            foreach ($sync['soal'] as $soal) {
-                                if ($soal['id_mapel'] == $banksoal['id_mapel']) {
-                                    $soalx = addslashes($soal['soal']);
-                                    $pilA = addslashes($soal['pilA']);
-                                    $pilB = addslashes($soal['pilB']);
-                                    $pilC = addslashes($soal['pilC']);
-                                    $pilD = addslashes($soal['pilD']);
-                                    $pilE = addslashes($soal['pilE']);
-                                    $sqlsoal = mysqli_query($koneksi, "insert into soal
-                    (id_soal,id_mapel,nomor,soal,jenis,pilA,pilB,pilC,pilD,pilE,jawaban,file,file1,fileA,fileB,fileC,fileD,fileE) values 			
-                    ('$soal[id_soal]','$soal[id_mapel]','$soal[nomor]','$soalx','$soal[jenis]','$pilA','$pilB','$pilC','$pilD','$pilE','$soal[jawaban]','$soal[file]','$soal[file1]','$soal[fileA]','$soal[fileB]','$soal[fileC]','$soal[fileD]','$soal[fileE]')");
-                                    if (!$sqlsoal) {
-                                        $gagal3++;
-                                    } else {
-                                        $masuk3++;
-                                    }
-                                }
-                            }
-
-
-                            //sinkron data file
-                            $urls = [];
-                            $i = 0;
-                            foreach ($sync['file'] as $file) {
-
-                                if ($file['id_mapel'] == $banksoal['id_mapel']) {
-                                    $urls[$i] = $setting['web'] . "/files/" . $file['nama_file'];
-                                    $i++;
-                                }
-                            }
-                            multiple_download($urls);
-                            // }
                         }
                     }
+                    foreach ($sync['soal'] as $soal) {
+                        // if ($soal['id_mapel'] == $banksoal['id_mapel']) {
+                            $soalx = addslashes($soal['soal']);
+                            $pilA = addslashes($soal['pilA']);
+                            $pilB = addslashes($soal['pilB']);
+                            $pilC = addslashes($soal['pilC']);
+                            $pilD = addslashes($soal['pilD']);
+                            $pilE = addslashes($soal['pilE']);
+                            $sqlsoal = mysqli_query($koneksi, "insert into soal
+            (id_soal,id_mapel,nomor,soal,jenis,pilA,pilB,pilC,pilD,pilE,jawaban,file,file1,fileA,fileB,fileC,fileD,fileE) values 			
+            ('$soal[id_soal]','$soal[id_mapel]','$soal[nomor]','$soalx','$soal[jenis]','$pilA','$pilB','$pilC','$pilD','$pilE','$soal[jawaban]','$soal[file]','$soal[file1]','$soal[fileA]','$soal[fileB]','$soal[fileC]','$soal[fileD]','$soal[fileE]')");
+                            if (!$sqlsoal) {
+                                $gagal3++;
+                            } else {
+                                $masuk3++;
+                            }
+                        // }
+                    }
+
+
+                    //sinkron data file
+                    $urls = [];
+                    $i = 0;
+                    foreach ($sync['file'] as $file) {
+
+                        if ($file['id_mapel'] == $banksoal['id_mapel']) {
+                            $urls[$i] = $setting['web'] . "/files/" . $file['nama_file'];
+                            $i++;
+                        }
+                    }
+                    multiple_download($urls);
+                    // }
+
                     $exec = mysqli_query($koneksi, "update sinkron set jumlah='$masuk2', status_sinkron='1',tanggal='$datetime'  where nama_data='DATA2'");
                     $exec = mysqli_query($koneksi, "update sinkron set jumlah='$masuk3', status_sinkron='1',tanggal='$datetime' where nama_data='DATA3'");
 
